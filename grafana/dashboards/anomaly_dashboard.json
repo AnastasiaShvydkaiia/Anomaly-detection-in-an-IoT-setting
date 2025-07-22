@@ -18,7 +18,7 @@
   "editable": true,
   "fiscalYearStartMonth": 0,
   "graphTooltip": 0,
-  "id": 2,
+  "id": 1,
   "links": [],
   "panels": [
     {
@@ -279,7 +279,7 @@
           "useBackend": false
         }
       ],
-      "title": "New panel",
+      "title": "Anomaly scores",
       "type": "timeseries"
     }
   ],
@@ -298,5 +298,5 @@
   "timezone": "browser",
   "title": "New dashboard",
   "uid": "dddfd6d0-eb6d-4105-b8ec-8bb948e1313a",
-  "version": 7
+  "version": 1
 }
