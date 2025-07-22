@@ -11,6 +11,11 @@ services:
       - ./postgres/data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
   zookeeper:
     image: confluentinc/cp-zookeeper:7.2.1
@@ -42,9 +47,12 @@ services:
     build: 
       context: ./api
     depends_on:
-      - kafka
-      - postgres
-      - mlflow
+      kafka:
+        condition: service_healthy
+      postgres:
+        condition: service_healthy
+      mlflow:
+        condition: service_started
     environment:
       - DB_HOST=postgres
       - DB_USER=postgres
@@ -98,9 +106,9 @@ services:
     depends_on:
       - prometheus
     volumes:
-    - ./grafana/dashboards:/etc/grafana/dashboards
-    - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
-    - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./grafana/dashboards:/etc/grafana/dashboards
+      - ./grafana/provisioning/dashboards:/etc/grafana/provisioning/dashboards
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
     environment:
       - GF_SECURITY_ADMIN_USER=admin
       - GF_SECURITY_ADMIN_PASSWORD=admin
