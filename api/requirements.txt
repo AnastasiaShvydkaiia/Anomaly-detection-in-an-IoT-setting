@@ -1,0 +1,10 @@
+Flask
+scipy
+pandas
+sqlalchemy
+prometheus-client
+requests
+mlflow
+scikit-learn
+kafka-python
+psycopg2-binary
