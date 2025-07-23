@@ -23,7 +23,7 @@ class Station:
         humidity=self.base_humidity+random.gauss(0,5)
         sound= self.base_sound+random.gauss(0,5)
         # Simulate occasional anomalies
-        if random.random()<0.1: # 10 % chance of anomaly
+        if random.random()<0.05: # 5 % chance of anomaly
             temp+=random.uniform(10,40)
             humidity+=random.uniform(10,40)
             sound+=random.uniform(10,40)

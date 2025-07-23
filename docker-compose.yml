@@ -9,6 +9,7 @@ services:
       - POSTGRES_DB=mydb 
     volumes:
       - ./postgres/data:/var/lib/postgresql/data
+      - ./postgres/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     ports:
       - "5432:5432"
     healthcheck:
@@ -59,6 +60,7 @@ services:
         condition: service_healthy
       mlflow:
         condition: service_started
+    restart: always
     environment:
       - DB_HOST=postgres
       - DB_USER=postgres

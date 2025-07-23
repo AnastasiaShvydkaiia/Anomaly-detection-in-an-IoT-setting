@@ -3,11 +3,9 @@ from scipy.stats import ks_2samp
 import datetime
 import pandas as pd
 from db import insert_prediction,load_training_data
-from monitor import prediction_counter, anomaly_counter, score_gauge, request_latency, get_metrics, active_anomalies
+from monitor import *
 from predictor import AnomalyDetector
-from db import init_db
-
-active_anomalies_state = {}
+from db import get_engine
 
 def check_ks_drift(reference_df,production_df,threshold=0.05):
     """Checks drift in input data using Kolmogorov-Smirnov test"""
@@ -22,24 +20,26 @@ def check_ks_drift(reference_df,production_df,threshold=0.05):
         }
     return drift_result
 
+# Global state to track active anomalies count
+active_anomalies_state = {}
+
 def update_metrics(station_id, is_anomaly, score):
     """Updates Prometheus metrics"""
     prediction_counter.labels(station_id=station_id).inc()
     score_gauge.labels(station_id=station_id).set(score)
+    current_count = active_anomalies_state.get(station_id, 0)
     if is_anomaly:
         anomaly_counter.labels(station_id=station_id).inc()
-    count = active_anomalies_state.get(station_id, 0)
-    if is_anomaly:
-        count += 1
+        current_count += 1
     else:
-        count = max(count - 1, 0)
-    active_anomalies_state[station_id] = count
-    active_anomalies.labels(station_id=station_id).set(count)
+        current_count = max(current_count - 1, 0)
+    active_anomalies_state[station_id] = current_count
+    active_anomalies.labels(station_id=station_id).set(current_count)
 
 def create_app():
     app=Flask(__name__)
     model=AnomalyDetector()
-    init_db()
+    get_engine()
     
     @app.route("/")
     def home():
@@ -53,6 +53,7 @@ def create_app():
             </form>
             <form action="/health" method="get">
                 <button type="submit">Health</button>
+            </form>
         ''')
 
     @app.route("/predict", methods=["POST"])

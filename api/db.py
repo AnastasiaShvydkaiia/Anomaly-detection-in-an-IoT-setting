@@ -21,25 +21,7 @@ def get_engine():
         _engine = create_engine(url, pool_pre_ping=True)
         SessionLocal = sessionmaker(bind=_engine)
     return _engine
-
-def create_table():
-    """Creates table in the database"""
-    engine = get_engine()
-    create_script = """
-        CREATE TABLE IF NOT EXISTS predictions (
-            id SERIAL PRIMARY KEY,
-            station_id TEXT,
-            timestamp TIMESTAMP,
-            temperature FLOAT,
-            humidity FLOAT,
-            sound_volume FLOAT,
-            anomaly_score FLOAT,
-            is_anomaly BOOLEAN
-        )
-    """
-    with engine.begin() as conn:
-        conn.execute(text(create_script))
-        
+   
 def get_session():
     if SessionLocal is None:
         raise RuntimeError("Database is not initialized")
@@ -104,7 +86,3 @@ def load_training_data(start_ts: str, end_ts: str):
         return pd.DataFrame(), {}
     finally:
         session.close()
-
-def init_db():
-    get_engine()
-    create_table()
