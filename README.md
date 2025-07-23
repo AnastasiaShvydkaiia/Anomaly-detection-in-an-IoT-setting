@@ -34,3 +34,4 @@ This project implements an end-to-end pipeline for real-time anomaly detection i
 - Grafana: http://localhost:3000 (admin/admin)
 
 - MLflow UI: http://localhost:5000
+
