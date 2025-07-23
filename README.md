@@ -17,7 +17,7 @@ This project implements an end-to-end pipeline for real-time anomaly detection i
 
 1. **Clone the repo:**
 
-```git clone https://github.com/yourname/anomaly-detection.git```
+```git clone https://github.com/AnastasiaShvydkaiia/Anomaly-detection-in-an-IoT-setting.git```
 
 ```cd anomaly-detection```
 
