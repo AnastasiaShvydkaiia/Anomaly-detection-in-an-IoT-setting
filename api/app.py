@@ -1,4 +1,4 @@
-from flask import Flask, request, jsonify, Response, render_template_string, redirect, url_for
+from flask import Flask, request, jsonify, Response, render_template_string
 from scipy.stats import ks_2samp
 import datetime
 import pandas as pd
@@ -20,21 +20,11 @@ def check_ks_drift(reference_df,production_df,threshold=0.05):
         }
     return drift_result
 
-# Global state to track active anomalies count
-active_anomalies_state = {}
-
 def update_metrics(station_id, is_anomaly, score):
     """Updates Prometheus metrics"""
-    prediction_counter.labels(station_id=station_id).inc()
     score_gauge.labels(station_id=station_id).set(score)
-    current_count = active_anomalies_state.get(station_id, 0)
     if is_anomaly:
         anomaly_counter.labels(station_id=station_id).inc()
-        current_count += 1
-    else:
-        current_count = max(current_count - 1, 0)
-    active_anomalies_state[station_id] = current_count
-    active_anomalies.labels(station_id=station_id).set(current_count)
 
 def create_app():
     app=Flask(__name__)
@@ -101,12 +91,12 @@ def create_app():
     @app.route("/check_drift", methods=["POST"])
     def check_drift():
         try:
-            params, reference_df=model.get_model_parameters() # Load the latest model parameters and training data
+            _, reference_df=model.get_model_parameters() # Load the latest model parameters and training data
 
             end = datetime.datetime.utcnow()
             start = end - datetime.timedelta(days=7)
 
-            production_df, metadata= load_training_data(start.isoformat(), end.isoformat())
+            production_df, _= load_training_data(start.isoformat(), end.isoformat())
             if reference_df.empty or production_df.empty:
                 return jsonify({
                     "drift_detected":None,
