@@ -1,0 +1,7 @@
+mlflow 
+pandas
+scipy
+scikit-learn
+sqlalchemy
+psycopg2-binary
+kafka-python
