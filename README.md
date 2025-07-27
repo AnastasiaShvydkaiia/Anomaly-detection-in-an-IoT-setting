@@ -56,7 +56,7 @@ Prometheus scrapes metrics from the Flask service (via a /metrics endpoint) to m
 
 ```git clone https://github.com/AnastasiaShvydkaiia/Anomaly-detection-in-an-IoT-setting.git```
 
-```cd anomaly-detection```
+```cd Anomaly-detection-in-an-IoT-setting```
 
 2. **Start the system:**
 
