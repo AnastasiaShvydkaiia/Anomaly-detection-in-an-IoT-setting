@@ -75,8 +75,7 @@ Prometheus scrapes metrics from the Flask service (via a /metrics endpoint) to m
 - Metrics endpoint: http://localhost:8000/metrics
 
 
-
-4. **Stop**
+4. **Stop the system**
 
 ```docker-compose down -v```
 
