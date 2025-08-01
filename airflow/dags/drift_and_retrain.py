@@ -1,4 +1,3 @@
-
 from airflow import DAG
 from airflow.operators.python import PythonOperator, BranchPythonOperator
 from datetime import datetime, timedelta
@@ -133,7 +132,7 @@ def skip():
 
 with DAG(
     dag_id="drift_and_retrain",
-    start_date=datetime(2023, 1, 1),
+    start_date=datetime(2025, 7, 1),
     schedule_interval="*/5 * * * *",
     catchup=False
 ) as dag:
@@ -161,3 +160,4 @@ with DAG(
     python_callable=notify_model_update,
     )
     retrain >> notify_update
+
