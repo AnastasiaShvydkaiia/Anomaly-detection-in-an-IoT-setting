@@ -1,9 +1,0 @@
-flask
-kafka-python
-pandas
-scikit-learn
-joblib
-sqlalchemy
-psycopg2-binary
-prometheus_client
-mlflow
