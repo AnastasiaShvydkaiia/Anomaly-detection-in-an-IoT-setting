@@ -12,10 +12,6 @@ class Station:
     """Simulates sensor data"""
     def __init__(self,station_id):
         self.station_id=station_id
-        # Initialize with the mean values
-        self.base_temp =30 
-        self.base_humidity = 20
-        self.base_sound = 50
 
     def simulate(self):
         # Sample from the fitted distributions
@@ -52,5 +48,6 @@ def stream_data(interval_seconds=15):
 
 if __name__ == "__main__":
     stream_data(interval_seconds=15)  # send every 15 seconds 
+
 
     
