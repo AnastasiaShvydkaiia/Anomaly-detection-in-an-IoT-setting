@@ -153,6 +153,7 @@ services:
       interval: 10s
       timeout: 5s
       retries: 5
+    restart: unless-stopped
 
   airflow-init:
     build:
@@ -189,7 +190,7 @@ services:
       dockerfile: Dockerfile
     image: custom-airflow:2.9.0
     container_name: airflow-webserver
-    restart: always
+    restart: unless-stopped
     depends_on:
       postgres_airflow:
         condition: service_healthy
@@ -211,11 +212,6 @@ services:
     ports:
       - "8080:8080"
     command: webserver
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
 
   airflow-scheduler:
     build:
@@ -223,10 +219,12 @@ services:
       dockerfile: Dockerfile
     image: custom-airflow:2.9.0
     container_name: airflow-scheduler
-    restart: always
+    restart: unless-stopped
     depends_on:
-      airflow-webserver:
+      postgres_airflow:
         condition: service_healthy
+      airflow-init:
+        condition: service_completed_successfully
       mlflow:
         condition: service_started
       kafka:
@@ -240,9 +238,3 @@ services:
       - ./airflow/airflow_logs:/opt/airflow/logs
       - ./mlflow:/mlflow
     command: scheduler
-    healthcheck:
-      test: ["CMD", "airflow", "jobs", "check", "--job-type", "SchedulerJob"]
-      interval: 30s
-      timeout: 10s
-      retries: 5
-
